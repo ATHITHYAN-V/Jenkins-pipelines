@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'my-node-app'
+        IMAGE_NAME = 'jenkins-pipeline-test'
         DOCKER_HUB_USER = 'athithyan402'
     }
 
