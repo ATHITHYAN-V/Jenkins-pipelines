@@ -6,13 +6,6 @@ pipeline {
         DOCKER_HUB_USER = 'athithyan402'
     }
 
-    stage('Checkout') {
-    steps {
-        git 'https://github.com/ATHITHYAN-V/Jenkins-pipelines.git'
-    }
-}
-
-
     stages {
         stage('Checkout') {
             steps {
