@@ -2,40 +2,51 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'my-app'
-        CONTAINER_NAME = 'my-app-container'
+        IMAGE_NAME = 'my-node-app'
+        DOCKER_HUB_USER = 'athithyan402'
     }
 
     stages {
-        stage('Clone Repo') {
+        stage('Checkout') {
             steps {
                 git 'https://github.com/ATHITHYAN-V/Jenkins-pipelines.git'
             }
         }
 
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'npm test'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $IMAGE_NAME .'
+                script {
+                    docker.build("${DOCKER_HUB_USER}/${IMAGE_NAME}")
+                }
             }
         }
 
-        stage('Run Docker Container') {
+        stage('Push to Docker Hub') {
             steps {
-                sh '''
-                    docker stop $CONTAINER_NAME || true
-                    docker rm $CONTAINER_NAME || true
-                    docker run -d --name $CONTAINER_NAME -p 80:80 $IMAGE_NAME
-                '''
+                script {
+                    docker.withRegistry('', 'dockerhub-credentials-id') {
+                        docker.image("${DOCKER_HUB_USER}/${IMAGE_NAME}").push('latest')
+                    }
+                }
             }
         }
-    }
 
-    post {
-        success {
-            echo '✅ Deployment Successful!'
-        }
-        failure {
-            echo '❌ Deployment Failed.'
+        stage('Cleanup') {
+            steps {
+                sh "docker rmi ${DOCKER_HUB_USER}/${IMAGE_NAME}:latest || true"
+            }
         }
     }
 }
