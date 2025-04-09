@@ -1,54 +1,30 @@
 pipeline {
     agent any
 
-    environment {
-        IMAGE_NAME = 'jenkins-pipeline-test'
-        DOCKER_HUB_USER = 'athithyan402'
-    }
-
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/ATHITHYAN-V/Jenkins-pipelines.git'
-            }
-        }
-
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                bat 'npm install'
             }
         }
-
         stage('Test') {
             steps {
-                sh 'npm test || echo "Tests failed but continuing for local testing"'
+                bat 'npm test'
             }
         }
-
         stage('Build Docker Image') {
             steps {
-                script {
-                    docker.build("${DOCKER_HUB_USER}/${IMAGE_NAME}")
-                }
+                bat 'docker build -t athithyan402/myapp:latest .'
             }
         }
-
         stage('Push to Docker Hub') {
-            when {
-                expression { return fileExists('.docker_push_enabled') }
-            }
             steps {
-                script {
-                    docker.withRegistry('', 'dockerhub-credentials-id') {
-                        docker.image("${DOCKER_HUB_USER}/${IMAGE_NAME}").push('latest')
-                    }
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials-id', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                    bat """
+                        echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin
+                        docker push athithyan402/myapp:latest
+                    """
                 }
-            }
-        }
-
-        stage('Cleanup') {
-            steps {
-                sh "docker rmi ${DOCKER_HUB_USER}/${IMAGE_NAME}:latest || true"
             }
         }
     }
