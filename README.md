@@ -11,21 +11,8 @@ Make sure you have the following installed:
 - [Jenkins](https://www.jenkins.io/) (for CI/CD)
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-🐳 Run with Docker
-1. Build the Docker image
----bash
-Copy
-Edit
-docker build -t my-node-app .
-2. Run the Docker container
----bash
-Copy
-Edit
-docker run -p 3000:3000 my-node-app
-3. Visit in browser
-Open: http://localhost:3000
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-📜 Jenkinsfile
+## 📜 Jenkinsfile
+
 Jenkins  pipeline:
 
 pipeline {
@@ -70,7 +57,7 @@ pipeline {
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-📜 package.json
+## 📜 package.json
 
 {
   "name": "jenkins-pipeline-app",
@@ -87,7 +74,7 @@ pipeline {
 }
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-🧠 index.js
+## 🧠 index.js
 javascript
 Copy
 Edit
@@ -100,9 +87,10 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`);
+  console.log(`App listening at http://localhost:${port}');
 });
-🐋 Dockerfile
+
+## 🐋 Dockerfile
 dockerfile
 Copy
 Edit
@@ -113,26 +101,27 @@ RUN npm install
 COPY . .
 EXPOSE 3000
 CMD ["node", "index.js"]
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## 💻 Run Locally
 
-### 1. Clone the repository
+1. Clone the repository
 
----bash
 git clone https://github.com/ATHITHYAN-V/Jenkins-pipelines.git
+
 cd Jenkins-pipelines
+
 2. Install dependencies
-bash
-Copy
-Edit
+   
 npm install
-3. Start the application
-bash
-Copy
-Edit
+
+4. Start the application
+
 npm start
-4. Open in browser
+
+5. Open in browser
+   
 Visit: http://localhost:3000
 
 # DockerHub
